@@ -1,15 +1,13 @@
 import { MongoClient } from "mongodb";
 import { Database } from "../lib/types";
 
-const url = `mongodb+srv://${process.env.DB_USER}:${
-  process.env.DB_USER_PASSWORD
-}@${process.env.DB_CLUSTER}.mongodb.net`;
+const url = `${process.env.MONGODB_CONNECTION_STRING}`;
 
 export const connectDatabase = async (): Promise<Database> => {
   const client = await MongoClient.connect(url, { useNewUrlParser: true });
-  const db = client.db("main");
+  const db = client.db("tinyhouse");
 
   return {
-    listings: db.collection("test_listings")
+    listings: db.collection("test_listings"),
   };
 };
