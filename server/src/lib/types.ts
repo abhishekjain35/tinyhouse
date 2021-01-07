@@ -16,6 +16,7 @@ export interface BookingsIndexYear {
 export interface BookingsIndex{
   [key: string]: BookingsIndexYear
 }
+
 export interface Listing {
   _id: ObjectId;
   title: string;

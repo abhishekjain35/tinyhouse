@@ -10,7 +10,7 @@ export const listingResolvers: IResolvers = {
       { db }: { db: Database }
     ): Promise<Listing[]> => {
       return await db.listings.find({}).toArray();
-    }
+    },
   },
   Mutation: {
     deleteListing: async (
@@ -19,7 +19,7 @@ export const listingResolvers: IResolvers = {
       { db }: { db: Database }
     ): Promise<Listing> => {
       const deleteRes = await db.listings.findOneAndDelete({
-        _id: new ObjectId(id)
+        _id: new ObjectId(id),
       });
 
       if (!deleteRes.value) {
@@ -27,9 +27,9 @@ export const listingResolvers: IResolvers = {
       }
 
       return deleteRes.value;
-    }
+    },
   },
   Listing: {
-    id: (listing: Listing): string => listing._id.toString()
-  }
+    id: (listing: Listing): string => listing._id.toString(),
+  },
 };
