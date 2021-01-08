@@ -9,7 +9,7 @@ const logInViaGoogle = async (
   token: string,
   db: Database
 ): Promise<User | undefined> => {
-  const { user } = Google.logIn(code);
+  const { user } = await Google.logIn(code);
   if (!user) {
     throw new Error("Google Login Error");
   }
@@ -107,8 +107,12 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to login: ${err}`);
       }
     },
-    logOut: () => {
-      return "Query.logOut";
+    logOut: (): Viewer => {
+      try {
+        return { didRequest: true };
+      } catch (error) {
+        throw new Error("Failed to Logout" + error);
+      }
     },
   },
   Viewer: {
