@@ -7,6 +7,7 @@ export const typeDefs = gql`
     token: String
     avatar: String
     hasWallet: Boolean!
+    didRequest: Boolean!
   }
 
   input LogInInput {
