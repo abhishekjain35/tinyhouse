@@ -21,29 +21,29 @@ const logInViaGoogle = async (
       ? user.emailAddresses
       : null;
 
-  const userName = userNamesList ? userNamesList[0].displayName : null;
-  const userId =
+  const name = userNamesList ? userNamesList[0].displayName : null;
+  const _id =
     userNamesList &&
     userNamesList[0].metadata &&
     userNamesList[0].metadata.source
       ? userNamesList[0].metadata.source.id
       : null;
 
-  const userAvatar =
+  const avatar =
     userPhotosList && userPhotosList[0].url ? userPhotosList[0].url : null;
 
   const userEmail =
     userEmailsList && userEmailsList[0].value ? userEmailsList[0].value : null;
 
-  if (!userId || !userName || !userAvatar || !userEmail) {
+  if (!_id || !name || !avatar || !userEmail) {
     throw new Error("Google login error");
   }
   const updateRes = await db.users.findOneAndUpdate(
-    { _id: userId },
+    { _id },
     {
       $set: {
-        name: userName,
-        avatar: userAvatar,
+        name,
+        avatar,
         contact: userEmail,
         token,
       },
@@ -54,17 +54,17 @@ const logInViaGoogle = async (
   let viewer = updateRes.value;
 
   if (!viewer) {
-    const inserRes = await db.users.insertOne({
-      _id: userId,
-      name: userName,
-      avatar: userAvatar,
+    const insertRes = await db.users.insertOne({
+      _id,
+      name,
+      avatar,
       contact: userEmail,
       token,
       income: 0,
       bookings: [],
       listings: [],
     });
-    viewer = inserRes.ops[0];
+    viewer = insertRes.ops[0];
   }
 
   return viewer;
@@ -96,11 +96,13 @@ export const viewerResolvers: IResolvers = {
         if (!viewer) {
           return { didRequest: true };
         }
+
+        const { _id, token: userToken, walletId, avatar } = viewer;
         return {
-          _id: viewer._id,
-          token: viewer.token,
-          walletId: viewer.walletId,
-          avatar: viewer.avatar,
+          _id,
+          walletId,
+          avatar,
+          token: userToken,
           didRequest: true,
         };
       } catch (err) {
