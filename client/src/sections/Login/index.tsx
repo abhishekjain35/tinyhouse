@@ -1,11 +1,14 @@
 import React from "react";
 import { Card, Layout, Typography } from "antd";
 import googleLogo from "./assets/google_logo.jpg";
-
+import { Viewer } from "../../lib/types";
 const { Content } = Layout;
 const { Text, Title } = Typography;
+interface Props {
+  setViewer: (viewer: Viewer) => void;
+}
 
-export const Login = () => {
+export const Login = ({ setViewer }: Props) => {
   return (
     <Content className="log-in">
       <Card className="log-in-card">
@@ -28,7 +31,10 @@ export const Login = () => {
             Sign in with Google!
           </span>
         </button>
-        <Text type="secondary">Note: By signing in, you'll be redirected to google consent form to sign in with your Google account.</Text>
+        <Text type="secondary">
+          Note: By signing in, you'll be redirected to google consent form to
+          sign in with your Google account.
+        </Text>
       </Card>
     </Content>
   );
