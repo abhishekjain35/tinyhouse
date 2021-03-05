@@ -1,4 +1,7 @@
 import React from "react";
+import { useApolloClient } from "@apollo/react-hooks";
+import { AUTH_URL } from "../../lib/graphql/queries/AuthUrl";
+import { AuthUrl } from "../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl";
 import { Card, Layout, Typography } from "antd";
 import googleLogo from "./assets/google_logo.jpg";
 import { Viewer } from "../../lib/types";
@@ -9,6 +12,16 @@ interface Props {
 }
 
 export const Login = ({ setViewer }: Props) => {
+  let client = useApolloClient();
+
+  const handleAuthorize = async () => {
+    try {
+      const { data } = await client.query<AuthUrl>({
+        query: AUTH_URL,
+      });
+      window.location.href = data.authUrl;
+    } catch {}
+  };
   return (
     <Content className="log-in">
       <Card className="log-in-card">
@@ -21,7 +34,10 @@ export const Login = ({ setViewer }: Props) => {
           <Title>Log in to TinyHouse!</Title>
           <Text>Sign in with Google to start booking available rentals</Text>
         </div>
-        <button className="log-in-card__google-button">
+        <button
+          className="log-in-card__google-button"
+          onClick={handleAuthorize}
+        >
           <img
             src={googleLogo}
             alt="Google Logo"
